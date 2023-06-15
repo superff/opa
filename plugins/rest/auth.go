@@ -292,7 +292,7 @@ func (ap *oauth2ClientCredentialsAuthPlugin) NewClient(c Config) (*http.Client, 
 		return nil, errors.New("grant_type must be either client_credentials or jwt_bearer")
 	}
 
-	if ap.GrantType == grantTypeJwtBearer || (ap.GrantType == grantTypeClientCredentials && ap.SigningKeyID != "") {
+	if ap.GrantType == grantTypeJwtBearer || (ap.GrantType == grantTypeClientCredentials && ap.SigningKeyID != "" && ap.ClientAssertionFile != "") {
 		if err = ap.parseSigningKey(c); err != nil {
 			return nil, err
 		}
@@ -406,6 +406,10 @@ func (ap *oauth2ClientCredentialsAuthPlugin) requestToken(ctx context.Context) (
 
 	if ap.GrantType == grantTypeClientCredentials && ap.ClientSecret != "" {
 		r.SetBasicAuth(ap.ClientID, ap.ClientSecret)
+	}
+
+	if ap.ClientAssertionType != "" {
+		body.
 	}
 
 	for k, v := range ap.AdditionalHeaders {
